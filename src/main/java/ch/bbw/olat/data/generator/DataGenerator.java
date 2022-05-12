@@ -1,33 +1,35 @@
 package ch.bbw.olat.data.generator;
 
 import ch.bbw.olat.data.Role;
+import ch.bbw.olat.data.entity.OlatPersonEntity;
+import ch.bbw.olat.data.entity.OlatUserEntity;
 import ch.bbw.olat.data.entity.SamplePerson;
-import ch.bbw.olat.data.entity.User;
+import ch.bbw.olat.data.service.OlatDataService;
 import ch.bbw.olat.data.service.SamplePersonRepository;
 import ch.bbw.olat.data.service.UserRepository;
 import com.vaadin.exampledata.DataType;
 import com.vaadin.exampledata.ExampleDataGenerator;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
+
 @SpringComponent
 public class DataGenerator {
 
     @Bean
     public CommandLineRunner loadData(PasswordEncoder passwordEncoder, SamplePersonRepository samplePersonRepository,
-            UserRepository userRepository) {
+                                      UserRepository userRepository, OlatDataService dataService) {
         return args -> {
             Logger logger = LoggerFactory.getLogger(getClass());
             if (samplePersonRepository.count() != 0L) {
                 logger.info("Using existing database");
-                return;
+                // return;
             }
             int seed = 123;
 
@@ -46,22 +48,26 @@ public class DataGenerator {
             samplePersonRepository.saveAll(samplePersonRepositoryGenerator.create(100, seed));
 
             logger.info("... generating 2 User entities...");
-            User user = new User();
-            user.setName("John Normal");
-            user.setUsername("user");
-            user.setHashedPassword(passwordEncoder.encode("user"));
-            user.setProfilePictureUrl(
-                    "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=128&h=128&q=80");
-            user.setRoles(Collections.singleton(Role.USER));
-            userRepository.save(user);
-            User admin = new User();
-            admin.setName("Emma Powerful");
-            admin.setUsername("admin");
-            admin.setHashedPassword(passwordEncoder.encode("admin"));
-            admin.setProfilePictureUrl(
-                    "https://images.unsplash.com/photo-1607746882042-944635dfe10e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=128&h=128&q=80");
-            admin.setRoles(Set.of(Role.USER, Role.ADMIN));
-            userRepository.save(admin);
+
+            OlatPersonEntity adminPerson = OlatPersonEntity.builder().firstname("Olat").lastname("Administrator").email("admin@olat.com").build();
+            dataService.getOlatPersonService().save(adminPerson);
+            OlatPersonEntity teacherPerson = OlatPersonEntity.builder().firstname("Olat").lastname("Teacher").email("teacher@olat.com").build();
+            dataService.getOlatPersonService().save(teacherPerson);
+            OlatPersonEntity studentPerson = OlatPersonEntity.builder().firstname("Olat").lastname("Student").email("student@olat.com").build();
+            dataService.getOlatPersonService().save(studentPerson);
+
+            adminPerson = dataService.getOlatPersonService().getRepository().findByEmail(adminPerson.getEmail());
+            teacherPerson = dataService.getOlatPersonService().getRepository().findByEmail(teacherPerson.getEmail());
+            studentPerson = dataService.getOlatPersonService().getRepository().findByEmail(studentPerson.getEmail());
+
+            OlatUserEntity adminUser = OlatUserEntity.builder().person(adminPerson).fileSystemPrefix("admin").roles(Collections.singleton(Role.ADMIN)).username("admin").hashedPassword(passwordEncoder.encode("admin")).build();
+            OlatUserEntity teacherUser = OlatUserEntity.builder().person(teacherPerson).fileSystemPrefix("teacher").roles(Collections.singleton(Role.TEACHER)).username("teacher").hashedPassword(passwordEncoder.encode("teacher")).build();
+            OlatUserEntity studentUser = OlatUserEntity.builder().person(studentPerson).fileSystemPrefix("student").roles(Collections.singleton(Role.STUDENT)).username("student").hashedPassword(passwordEncoder.encode("student")).build();
+
+            dataService.getOlatUserService().save(adminUser);
+            dataService.getOlatUserService().save(teacherUser);
+            dataService.getOlatUserService().save(studentUser);
+
 
             logger.info("Generated demo data");
         };

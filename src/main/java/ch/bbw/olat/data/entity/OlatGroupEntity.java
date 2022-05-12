@@ -16,7 +16,7 @@ public class OlatGroupEntity extends AOlatEntity {
     @Column(name = "file_system_prefix", nullable = false, unique = true)
     private String fileSystemPrefix;
 
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(cascade = CascadeType.MERGE, optional = false)
     @JoinColumn(name = "teacher_id", nullable = false)
     private OlatUserEntity teacher;
 

@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "olat_absence_entity")
 public class OlatAbsenceEntity extends AOlatEntity{
-    @OneToOne(cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.MERGE, optional = false, orphanRemoval = true)
     @JoinColumn(name = "olat_absence_entity_id", nullable = false)
     private OlatAbsenceEntity olatAbsenceEntity;
 

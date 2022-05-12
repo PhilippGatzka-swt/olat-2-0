@@ -12,15 +12,15 @@ public abstract class AOlatService<Repository extends IOlatRepository<Entity>, E
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
-    private final Repository repository;
+    protected final Repository repository;
 
     public AOlatService(Repository repository) {
         this.repository = repository;
     }
 
-    public Entity save(Entity entity) {
+    public void save(Entity entity) {
         logger.info("Saving entity: " + entity);
-        return repository.save(entity);
+        repository.save(entity);
     }
 
     public Optional<Entity> get(long id) {
@@ -41,5 +41,7 @@ public abstract class AOlatService<Repository extends IOlatRepository<Entity>, E
         repository.delete(get(id).orElseThrow());
     }
 
-
+    public Repository getRepository() {
+        return repository;
+    }
 }

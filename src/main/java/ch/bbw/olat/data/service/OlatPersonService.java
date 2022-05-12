@@ -11,4 +11,6 @@ public class OlatPersonService extends AOlatService<IOlatPersonRepository, OlatP
     public OlatPersonService(IOlatPersonRepository repository) {
         super(repository);
     }
+
+
 }
