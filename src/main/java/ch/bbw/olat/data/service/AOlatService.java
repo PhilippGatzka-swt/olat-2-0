@@ -1,6 +1,8 @@
 package ch.bbw.olat.data.service;
 
 import ch.bbw.olat.data.entity.AOlatEntity;
+import ch.bbw.olat.data.entity.OlatAbsenceEntity;
+import ch.bbw.olat.data.entity.OlatPersonEntity;
 import ch.bbw.olat.data.repository.IOlatRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,4 +46,6 @@ public abstract class AOlatService<Repository extends IOlatRepository<Entity>, E
     public Repository getRepository() {
         return repository;
     }
+
+
 }

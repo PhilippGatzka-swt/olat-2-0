@@ -1,9 +1,8 @@
 package ch.bbw.olat.data.generator;
 
 import ch.bbw.olat.data.Role;
-import ch.bbw.olat.data.entity.OlatPersonEntity;
-import ch.bbw.olat.data.entity.OlatUserEntity;
-import ch.bbw.olat.data.entity.SamplePerson;
+import ch.bbw.olat.data.entity.*;
+import ch.bbw.olat.data.service.OlatAbsenceService;
 import ch.bbw.olat.data.service.OlatDataService;
 import ch.bbw.olat.data.service.SamplePersonRepository;
 import ch.bbw.olat.data.service.UserRepository;
@@ -16,6 +15,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.security.auth.Subject;
+import java.sql.Date;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 
@@ -50,10 +53,11 @@ public class DataGenerator {
             logger.info("... generating 2 User entities...");
 
             OlatPersonEntity adminPerson = OlatPersonEntity.builder().firstname("Olat").lastname("Administrator").email("admin@olat.com").build();
-            dataService.getOlatPersonService().save(adminPerson);
             OlatPersonEntity teacherPerson = OlatPersonEntity.builder().firstname("Olat").lastname("Teacher").email("teacher@olat.com").build();
-            dataService.getOlatPersonService().save(teacherPerson);
             OlatPersonEntity studentPerson = OlatPersonEntity.builder().firstname("Olat").lastname("Student").email("student@olat.com").build();
+
+            dataService.getOlatPersonService().save(adminPerson);
+            dataService.getOlatPersonService().save(teacherPerson);
             dataService.getOlatPersonService().save(studentPerson);
 
             adminPerson = dataService.getOlatPersonService().getRepository().findByEmail(adminPerson.getEmail());
@@ -67,6 +71,64 @@ public class DataGenerator {
             dataService.getOlatUserService().save(adminUser);
             dataService.getOlatUserService().save(teacherUser);
             dataService.getOlatUserService().save(studentUser);
+
+            adminUser = dataService.getOlatUserService().getRepository().findByUsername(adminUser.getUsername());
+            teacherUser = dataService.getOlatUserService().getRepository().findByUsername(teacherUser.getUsername());
+            studentUser = dataService.getOlatUserService().getRepository().findByUsername(studentUser.getUsername());
+
+            OlatGroupEntity group1 = OlatGroupEntity.builder().fileSystemPrefix("5IA19a").name("5IA19a").teacher(teacherUser).build();
+            OlatGroupEntity group2 = OlatGroupEntity.builder().fileSystemPrefix("5II19c").name("5II19c").teacher(teacherUser).build();
+            OlatGroupEntity group3 = OlatGroupEntity.builder().fileSystemPrefix("5IS19b").name("5IS19b").teacher(teacherUser).build();
+
+            dataService.getOlatGroupService().save(group1);
+            dataService.getOlatGroupService().save(group2);
+            dataService.getOlatGroupService().save(group3);
+
+            group1 = dataService.getOlatGroupService().getRepository().findByName(group1.getName());
+            group2 = dataService.getOlatGroupService().getRepository().findByName(group2.getName());
+            group3 = dataService.getOlatGroupService().getRepository().findByName(group3.getName());
+
+            studentUser.getPerson().getOlatGroupEntities().add(group1);
+            studentUser.getPerson().getOlatGroupEntities().add(group2);
+
+            dataService.getOlatPersonService().save(studentPerson);
+
+            studentPerson = dataService.getOlatPersonService().getRepository().findByEmail(studentPerson.getEmail());
+
+            OlatSubjectEntity modul101 = OlatSubjectEntity.builder().fileSystemPrefix("modul101").name("modul101").details("modul101 - details").build();
+            OlatSubjectEntity modul102 = OlatSubjectEntity.builder().fileSystemPrefix("modul102").name("modul102").details("modul102 - details").build();
+            OlatSubjectEntity modul103 = OlatSubjectEntity.builder().fileSystemPrefix("modul103").name("modul103").details("modul103 - details").build();
+            OlatSubjectEntity modul104 = OlatSubjectEntity.builder().fileSystemPrefix("modul104").name("modul104").details("modul104 - details").build();
+            OlatSubjectEntity modul105 = OlatSubjectEntity.builder().fileSystemPrefix("modul105").name("modul105").details("modul105 - details").build();
+            OlatSubjectEntity modul106 = OlatSubjectEntity.builder().fileSystemPrefix("modul106").name("modul106").details("modul106 - details").build();
+
+            dataService.getOlatSubjectService().save(modul101);
+            dataService.getOlatSubjectService().save(modul102);
+            dataService.getOlatSubjectService().save(modul103);
+            dataService.getOlatSubjectService().save(modul104);
+            dataService.getOlatSubjectService().save(modul105);
+            dataService.getOlatSubjectService().save(modul106);
+
+            modul101 = dataService.getOlatSubjectService().getRepository().findByName("modul101");
+            modul102 = dataService.getOlatSubjectService().getRepository().findByName("modul102");
+            modul103 = dataService.getOlatSubjectService().getRepository().findByName("modul103");
+            modul104 = dataService.getOlatSubjectService().getRepository().findByName("modul104");
+            modul105 = dataService.getOlatSubjectService().getRepository().findByName("modul105");
+            modul106 = dataService.getOlatSubjectService().getRepository().findByName("modul106");
+
+            OlatAbsenceEntity absence1 = OlatAbsenceEntity.builder().comment("5 min to late").olatSubjectEntity(modul101).student(studentUser.getPerson()).date(Date.valueOf(LocalDate.now())).signed(false).build();
+            OlatAbsenceEntity absence2 = OlatAbsenceEntity.builder().comment("train crash").olatSubjectEntity(modul102).student(studentUser.getPerson()).date(Date.valueOf(LocalDate.now())).signed(true).build();
+            OlatAbsenceEntity absence3 = OlatAbsenceEntity.builder().comment("cat ate homework").olatSubjectEntity(modul103).student(studentUser.getPerson()).date(Date.valueOf(LocalDate.now())).signed(false).build();
+
+            dataService.getOlatAbsenceService().save(absence1);
+            dataService.getOlatAbsenceService().save(absence2);
+            dataService.getOlatAbsenceService().save(absence3);
+
+
+
+
+
+
 
 
             logger.info("Generated demo data");

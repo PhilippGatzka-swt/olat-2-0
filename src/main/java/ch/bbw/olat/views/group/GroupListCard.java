@@ -1,14 +1,19 @@
-package ch.bbw.olat.views.imagelist;
+package ch.bbw.olat.views.group;
 
+import ch.bbw.olat.data.entity.OlatGroupEntity;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.ListItem;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 
-public class ImageListViewCard extends ListItem {
+public class GroupListCard extends ListItem {
 
-    public ImageListViewCard(String text, String url) {
+    public GroupListCard(OlatGroupEntity group) {
+        String groupName = group.getName();
+        String groupTeacherName = group.getTeacher().getName();
+
         addClassNames("bg-contrast-5", "flex", "flex-col", "items-start", "p-m", "rounded-l");
 
         Div div = new Div();
@@ -16,30 +21,25 @@ public class ImageListViewCard extends ListItem {
                 "rounded-m w-full");
         div.setHeight("160px");
 
-        Image image = new Image();
-        image.setWidth("100%");
-        image.setSrc(url);
-        image.setAlt(text);
-
-        div.add(image);
-
         Span header = new Span();
         header.addClassNames("text-xl", "font-semibold");
-        header.setText("Title");
+        header.setText(groupName);
 
         Span subtitle = new Span();
         subtitle.addClassNames("text-s", "text-secondary");
-        subtitle.setText("Card subtitle");
+        subtitle.setText(groupTeacherName);
 
         Paragraph description = new Paragraph(
                 "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut.");
         description.addClassName("my-m");
 
-        Span badge = new Span();
-        badge.getElement().setAttribute("theme", "badge");
-        badge.setText("Label");
+        Button button = new Button("Get Started");
+        button.addClickListener(buttonClickEvent -> {
+            UI.getCurrent().navigate("group/" + groupName);
+        });
+        //button.getElement().setAttribute("theme", "badge");
 
-        add(div, header, subtitle, description, badge);
+        add(div, header, subtitle, description, button);
 
     }
 }

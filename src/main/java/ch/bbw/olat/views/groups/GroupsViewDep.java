@@ -19,13 +19,13 @@ import java.util.List;
 import javax.annotation.security.PermitAll;
 
 @PageTitle("Groups")
-@Route(value = "groups", layout = MainLayout.class)
+@Route(value = "groupsdep", layout = MainLayout.class)
 @PermitAll
-public class GroupsView extends Div implements AfterNavigationObserver {
+public class GroupsViewDep extends Div implements AfterNavigationObserver {
 
     Grid<Person> grid = new Grid<>();
 
-    public GroupsView() {
+    public GroupsViewDep() {
         addClassName("groups-view");
         setSizeFull();
         grid.setHeight("100%");
