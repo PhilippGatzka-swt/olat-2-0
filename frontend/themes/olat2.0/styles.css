@@ -4,7 +4,48 @@
 @import url('./views/list-view.css');
 @import url('./views/master-detail-view.css');
 @import url('./views/person-form-view.css');
-@import url('line-awesome/dist/line-awesome/css/line-awesome.min.css');
-    [theme~="dark"] {
 
-    }
+@import url('line-awesome/dist/line-awesome/css/line-awesome.min.css');
+
+@import url('./views/admin-person-master.css');
+
+[theme~="dark"] {
+
+}
+
+
+.admin-master {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.list-view {
+    display: block;
+    height: 100%;
+}
+
+.list-view vaadin-grid-pro {
+    height: 100%;
+}
+
+.list-view vaadin-grid-filter,
+.list-view vaadin-grid-filter > * {
+    width: 100%;
+}
+
+.list-view vaadin-grid-pro vaadin-horizontal-layout {
+    align-items: center;
+}
+
+.list-view vaadin-grid-pro img {
+    border-radius: 50%;
+    flex-shrink: 0;
+    height: var(--lumo-size-m);
+    width: var(--lumo-size-m);
+}
+
+.list-view .name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

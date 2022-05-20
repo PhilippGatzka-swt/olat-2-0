@@ -32,10 +32,7 @@
   width: 100%;
   flex-wrap: wrap;
   background-color: var(--lumo-contrast-5pct);
-  padding-bottom: var(--lumo-space-s);
-  padding-top: var(--lumo-space-s);
-  padding-left: var(--lumo-space-l);
-  padding-right: var(--lumo-space-l);
+  padding: var(--lumo-space-s) var(--lumo-space-l);
   gap: var(--lumo-space-m);
 }
 

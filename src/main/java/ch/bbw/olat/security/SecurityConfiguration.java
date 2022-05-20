@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Random;
+
 @EnableWebSecurity
 @Configuration
 public class SecurityConfiguration extends VaadinWebSecurityConfigurerAdapter {
@@ -26,6 +28,16 @@ public class SecurityConfiguration extends VaadinWebSecurityConfigurerAdapter {
 
         super.configure(http);
         setLoginView(http, LoginView.class, LOGOUT_URL);
+    }
+
+    public static String generatePassword() {
+        Random r = new Random();
+        StringBuilder password = new StringBuilder();
+        String alphabet = "abcdefghijklmnopqrstuvxyz1234567890";
+        for (int i = 0; i < 15; i++) {
+            password.append(alphabet.charAt(r.nextInt(alphabet.length())));
+        }
+        return password.toString();
     }
 
     @Override

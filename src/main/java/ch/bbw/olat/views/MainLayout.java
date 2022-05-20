@@ -1,14 +1,17 @@
 package ch.bbw.olat.views;
 
+import ch.bbw.olat.data.Role;
 import ch.bbw.olat.data.entity.OlatUserEntity;
 import ch.bbw.olat.security.AuthenticatedUser;
-import ch.bbw.olat.views.absence.AbsenceListView;
-import ch.bbw.olat.views.group.GroupListView;
-import ch.bbw.olat.views.groups.GroupsViewDep;
-import ch.bbw.olat.views.helloworld.HelloWorldView;
-import ch.bbw.olat.views.list.ListView;
-import ch.bbw.olat.views.masterdetail.MasterDetailView;
-import ch.bbw.olat.views.personform.PersonFormView;
+import ch.bbw.olat.views.admin.group.AdminGroupMaster;
+import ch.bbw.olat.views.admin.person.AdminPersonMaster;
+import ch.bbw.olat.views.admin.subject.AdminSubjectMaster;
+import ch.bbw.olat.views.admin.user.AdminUserMaster;
+import ch.bbw.olat.views.student.absence.StudentAbsenceMaster;
+import ch.bbw.olat.views.student.fileexplorer.StudentFileExplorer;
+import ch.bbw.olat.views.student.group.StudentGroupMaster;
+import ch.bbw.olat.views.teacher.absence.TeacherAbsenceMaster;
+import ch.bbw.olat.views.teacher.group.TeacherGroupMaster;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -82,6 +85,7 @@ public class MainLayout extends AppLayout {
         addToDrawer(createDrawerContent());
     }
 
+
     private Component createHeaderContent() {
         DrawerToggle toggle = new DrawerToggle();
         toggle.addClassNames("view-toggle");
@@ -126,22 +130,40 @@ public class MainLayout extends AppLayout {
     }
 
     private MenuItemInfo[] createMenuItems() {
-        return new MenuItemInfo[]{ //
-                new MenuItemInfo("Hello World", "la la-globe", HelloWorldView.class), //
+        Optional<OlatUserEntity> userOptional = authenticatedUser.get();
 
-                new MenuItemInfo("Groups", "la la-list", GroupsViewDep.class), //
+        if (userOptional.isPresent()) {
+            OlatUserEntity user = userOptional.get();
 
-                new MenuItemInfo("Groups", "la la-th-list", GroupListView.class), //
+            if (user.getRoles().contains(Role.ADMIN)) {
+                return new MenuItemInfo[]{
+                        new MenuItemInfo("Admin | Person Master", "la la-globe", AdminPersonMaster.class),
+                        new MenuItemInfo("Admin | User Master", "la la-globe", AdminUserMaster.class),
+                        new MenuItemInfo("Admin | Subject Master", "la la-globe", AdminSubjectMaster.class),
+                        new MenuItemInfo("Admin | Group Master", "la la-globe", AdminGroupMaster.class),
+                        new MenuItemInfo("Admin | About", "la la-globe", About.class),
+                };
+            }
 
-                new MenuItemInfo("List", "la la-th", ListView.class), //
+            if (user.getRoles().contains(Role.TEACHER)) {
+                return new MenuItemInfo[]{
+                        new MenuItemInfo("Teacher | Absence Master", "la la-globe", TeacherAbsenceMaster.class),
+                        new MenuItemInfo("Teacher | Group Master", "la la-globe", TeacherGroupMaster.class),
+                        new MenuItemInfo("Teacher | About", "la la-globe", About.class),
+                };
+            }
 
-                new MenuItemInfo("Master-Detail", "la la-columns", MasterDetailView.class), //
+            if (user.getRoles().contains(Role.STUDENT)) {
+                return new MenuItemInfo[]{
+                        new MenuItemInfo("Student | Absence Master", "la la-globe", StudentAbsenceMaster.class),
+                        new MenuItemInfo("Student | Group Master", "la la-globe", StudentGroupMaster.class),
+                        new MenuItemInfo("Student | File Explorer", "la la-globe", StudentFileExplorer.class),
+                        new MenuItemInfo("Student | About", "la la-globe", About.class),
+                };
+            }
+        }
 
-                new MenuItemInfo("Person Form", "la la-user", PersonFormView.class), //
-
-                new MenuItemInfo("Absences", "la la-list", AbsenceListView.class), //
-
-        };
+        return new MenuItemInfo[]{};
     }
 
     private Footer createFooter() {

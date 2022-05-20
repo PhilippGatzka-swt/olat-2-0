@@ -4,6 +4,8 @@ import ch.bbw.olat.data.Role;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
 
 
@@ -35,10 +37,21 @@ public class OlatUserEntity extends AOlatEntity{
     @Column(name = "profile_picture_url")
     private String profilePictureUrl;
 
+    @Column(name = "registered")
+    private Boolean registered;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinTable(name = "olat_user_entity_olat_group_entities",
+            joinColumns = @JoinColumn(name = "olat_user_entity_id"),
+            inverseJoinColumns = @JoinColumn(name = "olat_group_entities_id"))
+    private Collection<OlatGroupEntity> olatGroupEntities = new ArrayList<>();
+
     public String getName(){
         return person.getFirstname() + " " + person.getLastname();
     }
 
-
-
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

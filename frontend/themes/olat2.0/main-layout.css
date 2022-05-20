@@ -110,8 +110,5 @@
   display: flex;
   margin-bottom: var(--lumo-space-s);
   margin-top: var(--lumo-space-s);
-  padding-left: var(--lumo-space-m);
-  padding-right: var(--lumo-space-m);
-  padding-bottom: var(--lumo-space-xs);
-  padding-top: var(--lumo-space-xs);
+  padding: var(--lumo-space-xs) var(--lumo-space-m);
 }

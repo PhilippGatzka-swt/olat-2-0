@@ -1,8 +1,6 @@
 package ch.bbw.olat.data.service;
 
 import ch.bbw.olat.data.entity.AOlatEntity;
-import ch.bbw.olat.data.entity.OlatAbsenceEntity;
-import ch.bbw.olat.data.entity.OlatPersonEntity;
 import ch.bbw.olat.data.repository.IOlatRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,9 +41,28 @@ public abstract class AOlatService<Repository extends IOlatRepository<Entity>, E
         repository.delete(get(id).orElseThrow());
     }
 
+    public void delete(Entity entity) {
+        delete(entity.getId());
+    }
+
     public Repository getRepository() {
         return repository;
     }
 
+    protected String createFileSystemPrefix(String string){
+        return string.replaceAll("[^a-zA-Z\\d]","_").toLowerCase();
+    }
+
+    public boolean canBeDeleted(Entity entity){
+        return !entity.getInUse();
+    }
+
+    public abstract String checkConsistency(Entity entity);
+
+    protected String attributeNotUnique(String attrName){
+        return "Error: Attribute '" + attrName + "' has to be unique!";
+    }
+
+    public abstract List<Entity> filterAll(String filter);
 
 }

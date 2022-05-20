@@ -1,38 +1,39 @@
-package ch.bbw.olat.views.group;
+package ch.bbw.olat.views.student.group;
 
 import ch.bbw.olat.data.entity.OlatGroupEntity;
+import ch.bbw.olat.data.service.OlatDataService;
 import ch.bbw.olat.data.service.OlatGroupService;
 import ch.bbw.olat.views.MainLayout;
-import com.vaadin.flow.component.HasComponents;
-import com.vaadin.flow.component.HasStyle;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.html.OrderedList;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
-@PageTitle("Groups")
-@Route(value = "groups", layout = MainLayout.class)
-@PermitAll
-public class GroupListView extends Main implements HasComponents, HasStyle {
+
+@PageTitle("Student | Group Master")
+@Route(value = "student/group-master", layout = MainLayout.class)
+@RolesAllowed("STUDENT")
+public class StudentGroupMaster extends Div {
 
     private OrderedList groupContainer;
 
     @Autowired
-    public GroupListView(OlatGroupService groupService) {
+    public StudentGroupMaster(OlatGroupService groupService) {
         constructUI();
 
         List<OlatGroupEntity> groups = groupService.getAll();
 
         for (OlatGroupEntity group : groups) {
-            groupContainer.add(new GroupListCard(group));
+            groupContainer.add(new StudentGroupContainer(group));
         }
 
     }
@@ -57,4 +58,7 @@ public class GroupListView extends Main implements HasComponents, HasStyle {
         add(container, groupContainer);
 
     }
+
+
+
 }

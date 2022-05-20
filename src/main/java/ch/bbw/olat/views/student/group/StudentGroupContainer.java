@@ -1,16 +1,13 @@
-package ch.bbw.olat.views.group;
+package ch.bbw.olat.views.student.group;
 
 import ch.bbw.olat.data.entity.OlatGroupEntity;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.ListItem;
-import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.html.*;
 
-public class GroupListCard extends ListItem {
+public class StudentGroupContainer extends ListItem {
 
-    public GroupListCard(OlatGroupEntity group) {
+    public StudentGroupContainer(OlatGroupEntity group) {
         String groupName = group.getName();
         String groupTeacherName = group.getTeacher().getName();
 
@@ -34,9 +31,7 @@ public class GroupListCard extends ListItem {
         description.addClassName("my-m");
 
         Button button = new Button("Get Started");
-        button.addClickListener(buttonClickEvent -> {
-            UI.getCurrent().navigate("group/" + groupName);
-        });
+        button.addClickListener(buttonClickEvent -> UI.getCurrent().navigate("group/" + groupName));
         //button.getElement().setAttribute("theme", "badge");
 
         add(div, header, subtitle, description, button);

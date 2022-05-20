@@ -10,7 +10,6 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name = "olat_absence_entity")
 public class OlatAbsenceEntity extends AOlatEntity {
