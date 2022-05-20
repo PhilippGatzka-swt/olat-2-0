@@ -1,0 +1,14 @@
+a[highlight] {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.list-view{
+    margin: 5px;
+}
+
+.list-view.editing.toolbar,
+.list-view.editing.grid {
+    display: none;
+}
+
