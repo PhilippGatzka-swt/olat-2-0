@@ -43,7 +43,7 @@ public class AdminUserMasterForm extends AForm<OlatUserEntity, IOlatUserReposito
             String defaultPassword = SecurityConfiguration.generatePassword();
             String password_ = dataService.getPasswordEncoder().encode(defaultPassword);
             Role role_ = role.getValue();
-
+            System.out.println(defaultPassword);
             user = dataService.getOlatUserService().buildEntity(username_, password_, person_, role_);
         } else {
             Role role_ = role.getValue();
